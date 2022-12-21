@@ -1,12 +1,12 @@
 import React from "react";
 import styled from "styled-components";
 
-const Todo = () => {
+const Todo = ({ title, isDone }) => {
   return (
     <TodoContainer>
-      <H3>할 일!</H3>
+      <H3>{title}</H3>
       <BtnContainer>
-        <StyledBtn>Done/Todo</StyledBtn>
+        <StyledBtn>{isDone ? "Cancel" : "Done"}</StyledBtn>
         <StyledBtn>Delete</StyledBtn>
         <StyledBtn>Detail</StyledBtn>
       </BtnContainer>
@@ -19,6 +19,7 @@ const TodoContainer = styled.div`
   background-color: #ddd;
   border-radius: 10px;
   padding: 12px;
+  margin-bottom: 20px;
 `;
 
 const StyledBtn = styled.button`
