@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice, nanoid } from "@reduxjs/toolkit";
 import axios from "axios";
 
 const name = "todoList";
@@ -19,6 +19,52 @@ export const getTodoList = createAsyncThunk(
   }
 );
 
+export const postTodoList = createAsyncThunk(
+  `${name}/postTodoList`,
+  async (todoTitle, thunkAPI) => {
+    try {
+      const res = await axios.post("http://localhost:3001/todoList", {
+        todoTitle,
+        isDone: false,
+        id: nanoid(),
+      });
+      return thunkAPI.fulfillWithValue(res.data);
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error);
+    }
+  }
+);
+
+// getTodoList 의 reducer
+const getTodoListRdc = {
+  [getTodoList.pending]: (state, action) => {
+    state.isLoading = true;
+  },
+  [getTodoList.fulfilled]: (state, action) => {
+    state.todoListData = action.payload;
+    state.isLoading = false;
+  },
+  [getTodoList.rejected]: (state, action) => {
+    state.error = action.error;
+    state.isLoading = false;
+  },
+};
+
+// postTodoList 의 reducer
+const postTodoListRdc = {
+  [postTodoList.pending]: (state, action) => {
+    state.isLoading = true;
+  },
+  [postTodoList.fulfilled]: (state, action) => {
+    state.todoListData = action.payload;
+    state.isLoading = false;
+  },
+  [postTodoList.rejected]: (state, action) => {
+    state.error = action.error;
+    state.isLoading = false;
+  },
+};
+
 // 이 자식이 reducer 그 자체 (그런데 action creator를 곁들인..)
 const todoListSlice = createSlice({
   name,
@@ -28,19 +74,7 @@ const todoListSlice = createSlice({
     error: null,
   },
   reducers: {},
-  extraReducers: {
-    [getTodoList.pending]: (state, action) => {
-      state.isLoading = true;
-    },
-    [getTodoList.fulfilled]: (state, action) => {
-      state.todoListData = action.payload;
-      state.isLoading = false;
-    },
-    [getTodoList.rejected]: (state, action) => {
-      state.error = action.error;
-      state.isLoading = false;
-    },
-  },
+  extraReducers: { ...getTodoListRdc, ...postTodoListRdc },
 });
 
 // slice 는 reducer + action creator 인데
