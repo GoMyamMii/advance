@@ -1,0 +1,19 @@
+{
+  "jsonTodoList": [
+    {
+      "title": "아침에 잘 일어나기",
+      "iSDone": false,
+      "id": "1"
+    },
+    {
+      "title": "세수하기",
+      "iSDone": true,
+      "id": "2"
+    },
+    {
+      "title": "나는 천재라고 자기암시 하기",
+      "iSDone": false,
+      "id": "3"
+    }
+  ]
+}
