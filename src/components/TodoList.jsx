@@ -22,13 +22,23 @@ const TodoList = () => {
       <TodosContainer>
         <h1>Todo</h1>
         {todoList.map((item) => (
-          <Todo title={item.title} isDone={item.isDone} key={item.id} />
+          <Todo
+            title={item.todoTitle}
+            isDone={item.isDone}
+            id={item.id}
+            key={item.id}
+          />
         ))}
       </TodosContainer>
       <TodosContainer>
         <h1>Done</h1>
         {doneList.map((item) => (
-          <Todo title={item.title} isDone={item.isDone} key={item.id} />
+          <Todo
+            title={item.todoTitle}
+            isDone={item.isDone}
+            id={item.id}
+            key={item.id}
+          />
         ))}
       </TodosContainer>
     </TodoListContainer>

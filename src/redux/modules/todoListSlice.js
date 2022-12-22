@@ -3,6 +3,8 @@ import axios from "axios";
 
 const name = "todoList";
 
+///////////////////////////////////////////////////////////////////
+
 // 이 자식들이 action 인듯 ?? (그런데 thunk를 곁들인..)
 export const getTodoList = createAsyncThunk(
   `${name}/getTodoList`,
@@ -23,17 +25,37 @@ export const postTodoList = createAsyncThunk(
   `${name}/postTodoList`,
   async (todoTitle, thunkAPI) => {
     try {
-      const res = await axios.post("http://localhost:3001/todoList", {
+      await axios.post("http://localhost:3001/todoList", {
         todoTitle,
         isDone: false,
         id: nanoid(),
       });
+      const res = await axios.get("http://localhost:3001/todoList");
       return thunkAPI.fulfillWithValue(res.data);
     } catch (error) {
       return thunkAPI.rejectWithValue(error);
     }
   }
 );
+
+export const deleteTodoList = createAsyncThunk(
+  `${name}/deleteTodoList`,
+  async (payload, thunkAPI) => {
+    console.log(payload);
+    try {
+      // axios로 json 서버에 있는 녀석을 삭제
+      await axios.delete(`http://localhost:3001/todoList/${payload}`);
+      // 최신화 된 리스트 다시 get 요청
+      const res = await axios.get("http://localhost:3001/todoList");
+      // 성공하면 띄워줌 ^-^
+      return thunkAPI.fulfillWithValue(res.data);
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error);
+    }
+  }
+);
+
+///////////////////////////////////////////////////////////////////
 
 // getTodoList 의 reducer
 const getTodoListRdc = {
@@ -65,6 +87,23 @@ const postTodoListRdc = {
   },
 };
 
+// deleteTodoList 의 reducer
+const deleteTodoListRdc = {
+  [deleteTodoList.pending]: (state, action) => {
+    state.isLoading = true;
+  },
+  [deleteTodoList.fulfilled]: (state, action) => {
+    state.todoListData = action.payload;
+    state.isLoading = false;
+  },
+  [deleteTodoList.rejected]: (state, action) => {
+    state.error = action.error;
+    state.isLoading = false;
+  },
+};
+
+///////////////////////////////////////////////////////////////////
+
 // 이 자식이 reducer 그 자체 (그런데 action creator를 곁들인..)
 const todoListSlice = createSlice({
   name,
@@ -74,7 +113,11 @@ const todoListSlice = createSlice({
     error: null,
   },
   reducers: {},
-  extraReducers: { ...getTodoListRdc, ...postTodoListRdc },
+  extraReducers: {
+    ...getTodoListRdc,
+    ...postTodoListRdc,
+    ...deleteTodoListRdc,
+  },
 });
 
 // slice 는 reducer + action creator 인데

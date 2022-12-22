@@ -1,14 +1,27 @@
 import React from "react";
+import { useDispatch } from "react-redux";
 import styled from "styled-components";
+import { deleteTodoList } from "../redux/modules/todoListSlice";
 
-const Todo = ({ title, isDone }) => {
+const Todo = ({ title, isDone, id }) => {
+  const dispatch = useDispatch();
+
+  const handleDeleteClick = () => {
+    dispatch(deleteTodoList(id));
+  };
+
   return (
     <TodoContainer>
       <H3>{title}</H3>
       <BtnContainer>
         <StyledBtn>{isDone ? "Cancel" : "Done"}</StyledBtn>
-        <StyledBtn>Delete</StyledBtn>
-        <StyledBtn>Detail</StyledBtn>
+        <StyledBtn
+          onClick={() => {
+            handleDeleteClick();
+          }}
+        >
+          Delete
+        </StyledBtn>
       </BtnContainer>
     </TodoContainer>
   );
