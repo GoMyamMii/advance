@@ -1,15 +1,11 @@
-import React from "react";
-import Header from "./components/Header";
 import Main from "./components/Main";
-import Footer from "./components/Footer";
+import Layout from "./components/layout/Layout";
 
 const App = () => {
   return (
-    <>
-      <Header />
+    <Layout>
       <Main />
-      <Footer />
-    </>
+    </Layout>
   );
 };
 
