@@ -1,27 +1,14 @@
-import React, { useRef } from "react";
-import { useDispatch } from "react-redux";
+import React from "react";
 import styled from "styled-components";
-import { postTodoList } from "../redux/modules/todoListSlice";
+import useTodo from "../hooks/useTodo";
 
 const InputTodo = () => {
-  const dispatch = useDispatch();
-
-  const todoTitleRef = useRef();
-
-  const handleAddClick = (e) => {
-    dispatch(postTodoList(todoTitleRef.current.value));
-  };
+  const { todoItemValue, onChange, addTodo } = useTodo();
 
   return (
     <InputTodoContainer>
-      <StyledInput ref={todoTitleRef} />
-      <StyledButton
-        onClick={(e) => {
-          handleAddClick(e);
-        }}
-      >
-        추가하기
-      </StyledButton>
+      <StyledInput value={todoItemValue} onChange={onChange} />
+      <StyledButton onClick={addTodo}>추가하기</StyledButton>
     </InputTodoContainer>
   );
 };

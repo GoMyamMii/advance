@@ -55,6 +55,22 @@ export const deleteTodoList = createAsyncThunk(
   }
 );
 
+export const toggleTodoList = createAsyncThunk(
+  `${name}/toggleTodoList`,
+  async ({ id, isDone }, thunkAPI) => {
+    try {
+      await axios.patch(`http://localhost:3001/todoList/${id}`, {
+        isDone: !isDone,
+      }); // 최신화 된 리스트 다시 get 요청
+      const res = await axios.get("http://localhost:3001/todoList");
+      // 성공하면 띄워줌 ^-^
+      return thunkAPI.fulfillWithValue(res.data);
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error);
+    }
+  }
+);
+
 ///////////////////////////////////////////////////////////////////
 
 // getTodoList 의 reducer
@@ -102,6 +118,21 @@ const deleteTodoListRdc = {
   },
 };
 
+// toggleTodoList 의 reducer
+const toggleTodoListRdc = {
+  [toggleTodoList.pending]: (state, action) => {
+    state.isLoading = true;
+  },
+  [toggleTodoList.fulfilled]: (state, action) => {
+    state.todoListData = action.payload;
+    state.isLoading = false;
+  },
+  [toggleTodoList.rejected]: (state, action) => {
+    state.error = action.error;
+    state.isLoading = false;
+  },
+};
+
 ///////////////////////////////////////////////////////////////////
 
 // 이 자식이 reducer 그 자체 (그런데 action creator를 곁들인..)
@@ -117,6 +148,7 @@ const todoListSlice = createSlice({
     ...getTodoListRdc,
     ...postTodoListRdc,
     ...deleteTodoListRdc,
+    ...toggleTodoListRdc,
   },
 });
 
