@@ -41,7 +41,6 @@ export const postTodoList = createAsyncThunk(
 export const deleteTodoList = createAsyncThunk(
   `${name}/deleteTodoList`,
   async (payload, thunkAPI) => {
-    console.log(payload);
     try {
       // axios로 json 서버에 있는 녀석을 삭제
       await axios.delete(`http://localhost:3001/todoList/${payload}`);
